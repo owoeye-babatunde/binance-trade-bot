@@ -6,19 +6,25 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write  # This is needed for pushing commits
+  contents: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Trade detail
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref }}
+          
+      - name: Configure Git
+        run: |
+          git config --global user.name "${{ secrets.GH_USERNAME }}"
+          git config --global user.email "${{ secrets.GH_EMAIL }}"
+          
+      - name: Update README
         run: |
           echo " " >> README.md
-          git config user.name "${{ secrets.GH_USERNAME }}"
-          git config user.email "${{ secrets.GH_EMAIL }}"
-          git add .
-          git commit -m "New trade detail is here!"
-          git push
+          git add README.md
+          git commit -m "Trade data is ready!"
+          git push origin HEAD:master
