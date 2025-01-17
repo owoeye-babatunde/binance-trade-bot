@@ -1,0 +1,21 @@
+name: CI
+
+on:
+  schedule:
+    - cron: "30 8 * * *"    # Will run at 8:30 AM UTC every day
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Run a one-line script
+        run: |
+          echo " " >> README.md
+          git config user.name ${{ secrets.GH_USERNAME }}
+          git config user.email ${{ secrets.GH_EMAIL }}
+          git add .
+          git commit -m "Always green!"
+          git push
